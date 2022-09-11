@@ -1,6 +1,6 @@
 // Business Logic for places
 function PlacesLog() {
-  this.places = {}
+  this.places = {};
   this.currentId = 0;
 }
 
@@ -21,12 +21,16 @@ PlacesLog.prototype.findPlaces = function(id) {
   return false;
 };
 
-function Destination(countrytName, cityName, dateVisited, landmark) {
-  this.countryName = countrytName;
+function Destination(countryName, cityName, dateVisited, landmark) {
+  this.countryName = countryName;
   this.cityName = cityName;
   this.dateVisited = dateVisited;
   this.landmark = landmark;
 }
+
+Destination.prototype.location = function() {
+  return this.landmark + " in " + this.cityName + ", " + this.countryName + " on " + this.dateVisited;
+};
 
 //User Interface Logic
 let placesLog = new PlacesLog();
@@ -35,11 +39,16 @@ function displayPlaces(placesLogToDisplay) {
   let destinationDiv = document.querySelector("div#destination-details");
   destinationDiv.innerText = null;
   const ul = document.createElement("ul");
+  console.log(placesLogToDisplay.places);
   Object.keys(placesLogToDisplay.places).forEach(function(key) {
-  const contact = placesLogToDisplay.findPlaces(key);
-  const li = document.createElement("li");
-  li.append()
-})
+    const place = placesLogToDisplay.findPlaces(key);
+    const li = document.createElement("li");
+    li.append(place.location());
+    li.setAttribute("id", place.id);
+    ul.append(li);
+  });
+  destinationDiv.append(ul);
+  destinationDiv.removeAttribute("class");
 }
 
 function handleFormSubmission(event) {
@@ -50,6 +59,7 @@ function handleFormSubmission(event) {
   const inputtedLandmark = document.querySelector("input#landmark").value;
   let newDestination = new Destination(inputtedCountryName, inputtedCityName, inputtedDateVisited, inputtedLandmark);
   placesLog.addPlace(newDestination);
+  displayPlaces(placesLog);
 }
 
 window.addEventListener("load", function () {
